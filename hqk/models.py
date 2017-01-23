@@ -64,7 +64,7 @@ class Category(models.Model):
 	summary = models.TextField('摘要')
 	
 	def __str__(self):
-		return self.category_name
+		return ''.join([self.category_name, ':', self.category_code])
 	class Meta:
 		verbose_name='分类'
 		verbose_name_plural = "分类"
@@ -72,6 +72,8 @@ class Category(models.Model):
 	
 	
 class Device(models.Model):
+	#设备来源
+	bid = models.CharField('设备来源', max_length=100, default='自主采购')
 	# 唯一性编号
 	number = models.CharField('唯一性编号', max_length=100)
 	# 设备类型，-----------外键
@@ -119,26 +121,26 @@ class Device(models.Model):
 物资类
 '''	
 class Material(models.Model):
-	#物资种类
-	category = models.ForeignKey(Category, on_delete=models.CASCADE)
+	#物资种类--------------------此处可以显示物料的编号：category.category_code
+	category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='物资种类')
 	#物资名称
-	name =  models.CharField(max_length=100)
+	name =  models.CharField('物资名称', max_length=100)
 	#规格型号
-	model = models.CharField(max_length=100)
+	model = models.CharField('规格型号', max_length=100)
 	#单位
-	unit = models.CharField(max_length=100)
+	unit = models.CharField('单位', max_length=100)
 	#批号
-	lot = models.CharField(max_length=100)
+	lot = models.CharField('批号', max_length=100)
 	#生产日期
-	production_date = models.DateField()
+	production_date = models.DateField('生产日期')
 	#到期日期
-	expired_date = models.DateField()
+	expired_date = models.DateField('到期日期')
 	#单价
-	value = models.FloatField()
+	value = models.FloatField('单价')
 	#生产厂家
-	manufactor = models.CharField(max_length=100)
+	manufactor = models.CharField('生产厂家', max_length=100)
 	#备注
-	demo = models.TextField()	
+	demo = models.TextField('备注')	
 	
 	class Meta:
 		abstract = True
@@ -150,13 +152,13 @@ class Material(models.Model):
 '''	
 class Receipe(models.Model):
 	#业务类别
-	type = models.CharField(max_length=100)
+	type = models.CharField('业务类别', max_length=100)
 	#单据日期
-	receipe_date = models.DateField()
+	receipe_date = models.DateField('单据日期')
 	#单据编号
-	receipe_number = models.CharField(max_length=100)
+	receipe_number = models.CharField('单据编号', max_length=100)
 	#出单人
-	maker = models.CharField(max_length=100)
+	maker = models.CharField('出单人', max_length=100)
 	
 	class Meta:
 		abstract = True
@@ -168,17 +170,17 @@ class Receipe(models.Model):
 '''	
 class MaterialIn(Material, Receipe):	
 	#供货商
-	supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)	
+	supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, verbose_name='供货商')	
 	#采购人
-	buyer = models.CharField(max_length=100)
+	buyer = models.CharField('采购人', max_length=100)
 	#仓库
-	repository = models.CharField(max_length=100)
-	#部门
-	department = models.CharField(max_length=100, default="hqk")
+	repository = models.CharField('仓库', max_length=100)
+	#接收部门
+	department = models.CharField('接收部门', max_length=100, default="后勤科")
 	#数量
-	quanlity = models.IntegerField()		
+	quanlity = models.IntegerField('数量')		
 	#摘要
-	summary = models.CharField(max_length=100)
+	summary = models.CharField('备注', max_length=100)
 	
 	def __str__(self):
 		return super.receipe_number
@@ -193,15 +195,15 @@ class MaterialIn(Material, Receipe):
 '''
 class MaterialOut(Material, Receipe):
 	#对应的入库单
-	materialIn = models.ForeignKey(MaterialIn)
+	materialIn = models.ForeignKey(MaterialIn, on_delete=models.CASCADE, verbose_name='对应入库单')
 	#领用人
-	user = models.CharField(max_length=100)
+	user = models.CharField('领用人', max_length=100)
 	#领用部门    
-	department = models.CharField(max_length=100)
+	department = models.CharField('领用科室', max_length=100)
 	#用途
-	usage = models.CharField(max_length=100)
+	usage = models.CharField('用途', max_length=100)
 	#数量
-	quanlity = models.CharField(max_length=100)
+	quanlity = models.CharField('数量', max_length=100)
 	
 	def __str__(self):
 		return super.receipe_number
@@ -217,19 +219,19 @@ class MaterialOut(Material, Receipe):
 '''
 class MaterialRequisition(models.Model):
 	#标题
-	title = models.CharField(max_length=100)
+	title = models.CharField('标题', max_length=100)
 	#申请者
-	applicant = models.CharField(max_length=100, default="hanbin") 
+	applicant = models.CharField('申请者', max_length=100, default="hanbin") 
 	#科室
-	department = models.CharField(max_length=100, default="hqk")
+	department = models.CharField('科室', max_length=100, default="后勤科")
 	#原因
-	reson = models.TextField()
+	reson = models.TextField('原因', )
 	#科长
-	chief = models.CharField(max_length=100, default="moufs")
+	chief = models.CharField('科长', max_length=100, default="moufs")
 	#分管领导
-	charger = models.CharField(max_length=100, default="scsh")
+	charger = models.CharField('分管领导', max_length=100, default="scsh")
 	#主管领导
-	director = models.CharField(max_length=100, default="yhl")
+	director = models.CharField('主管领导', max_length=100, default="yhl")
 	
 	def __str__(self):
 		return self.title
