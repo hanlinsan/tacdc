@@ -25,13 +25,14 @@ SECRET_KEY = '#+3wdm)0z^t1-%v0n)b!pz&ag7v8eaa&xm7_mdg2=p@c@e%x@j'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.190']
+ALLOWED_HOSTS = ['192.168.1.180', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
 	'hqk.apps.HqkConfig',
+	'bootstrap_admin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -67,6 +68,8 @@ TEMPLATES = [
         },
     },
 ]
+
+BOOTSTRAP_ADMIN_SIDEBAR_MENU = True
 
 WSGI_APPLICATION = 'tacdc.wsgi.application'
 
@@ -104,9 +107,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh_Hans'
 
-TIME_ZONE = 'UTC'
+#TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -114,6 +118,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOCALE_PATHS = [
+	'/var/www/html/static/',
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/

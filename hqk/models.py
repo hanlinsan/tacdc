@@ -22,79 +22,97 @@ from django.db import models
 
 class Supplier(models.Model):
 	# 公司名称
-	company_name = models.CharField(max_length=100)
+	company_name = models.CharField("公司名称：",max_length=100)
 	# 业务种类
 	#categories = models.TextField()
 	# 联系人
-	contactor = models.CharField(max_length=100)
+	contactor = models.CharField("联系人：",max_length=100)
 	# 电话
-	phone = models.CharField(max_length=100)
+	phone = models.CharField("手机：",max_length=100)
 	# 邮箱
-	email = models.EmailField()
+	email = models.EmailField("电子邮箱：")
 	# 公司电话，或者传真
-	company_phone = models.CharField(max_length=100)
+	company_phone = models.CharField("公司电话：",max_length=100)
 	# 地址
-	address = models.CharField(max_length=254)
+	address = models.CharField("公司地址：",max_length=254)
 	# 附件，例如：营业执照等
-	attachments = models.FileField(upload_to='./uploads/%Y/%m/%d/')
+	attachments = models.FileField("三证附件：",upload_to='./uploads/%Y/%m/%d/')
 	# 评价等级
-	evaluation = models.CharField(max_length=100)
+	evaluation = models.CharField("评价等级：",max_length=100)
 	# 摘要
-	summary = models.TextField()
+	summary = models.TextField("公司经营范围：",)
 	
 	def __str__(self):
 		return self.company_name
 	
+	class Meta(object):
+		verbose_name='设备供应商'
+		verbose_name_plural='设备供应商'
+			
+
+			
+	
 	
 class Category(models.Model):
 	# 种类名称
-	category_name = models.CharField(max_length=100)
+	category_name = models.CharField('种类名称', max_length=100)
 	# 类别代码，设备，生活用品等分类
-	category_code = models.IntegerField()
+	category_code = models.IntegerField('类别代码')
 	# 供应商可以提供多个种类服务，因此是多对多的关系
 	suppliers = models.ManyToManyField(Supplier)
 	# 摘要
-	summary = models.TextField()
+	summary = models.TextField('摘要')
 	
 	def __str__(self):
 		return self.category_name
+	class Meta:
+		verbose_name='分类'
+		verbose_name_plural = "分类"
 
 	
 	
 class Device(models.Model):
 	# 唯一性编号
-	number = models.CharField(max_length=100)
+	number = models.CharField('唯一性编号', max_length=100)
 	# 设备类型，-----------外键
-	category = models.ForeignKey(Category, on_delete=models.CASCADE)
+	category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='设备类型')
 	# 设备名称
-	name = models.CharField(max_length=100)
+	name = models.CharField('设备名称', max_length=100)
 	# 规格型号
-	model = models.CharField(max_length=100)
+	model = models.CharField('规格型号', max_length=100)
 	# 出厂编号
-	factory_id = models.CharField(max_length=100)
+	factory_id = models.CharField('出厂编号', max_length=100)
 	# 参数
-	parameters = models.TextField()
+	parameters = models.TextField('参数')
 	# 生产厂家
-	manufactor = models.CharField(max_length=100)
+	manufactor = models.CharField('生产厂家', max_length=100)
 	# 出厂日期
-	release_date = models.DateField()
+	release_date = models.DateField('出厂日期')
 	# 购置日期
-	acquisition_date = models.DateField()
+	acquisition_date = models.DateField('购置日期')
 	# 启用日期
-	received_date = models.DateField()
+	received_date = models.DateField('启用日期')
 	# 使用科室
-	department = models.CharField(max_length=100)
+	department = models.CharField('使用科室', max_length=100)
 	# 保管人
-	keeper = models.CharField(max_length=100)
+	keeper = models.CharField('保管人', max_length=100)
 	# 价值
-	value = models.FloatField()
+	value = models.FloatField('价值')
 	# 供应商,---------------外键 设备与供应商的关系是多对一的关系
-	supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
+	supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, verbose_name='供应商')
 	# 备注
-	demo = models.TextField()
+	demo = models.TextField('备注')
 	
 	def __str__(self):
 		return self.name
+	class Meta:
+		verbose_name='设备'
+		verbose_name_plural='设备'
+		"""docstring for Meta"""
+		def __init__(self, arg):
+			super(Meta, self).__init__()
+			self.arg = arg
+			
 
 
 '''
@@ -164,6 +182,10 @@ class MaterialIn(Material, Receipe):
 	
 	def __str__(self):
 		return super.receipe_number
+		
+	class Meta(object):
+		verbose_name='入库单'
+		verbose_name_plural='入库单'
 
 		
 '''
@@ -183,7 +205,10 @@ class MaterialOut(Material, Receipe):
 	
 	def __str__(self):
 		return super.receipe_number
-	
+
+	class Meta:
+		verbose_name='出库单'
+		verbose_name_plural='出库单'
 	
 '''
 申请单:
@@ -208,4 +233,9 @@ class MaterialRequisition(models.Model):
 	
 	def __str__(self):
 		return self.title
+	class Meta(object):
+		verbose_name='申请单'
+		verbose_name_plural='申请单'
+
+			
 	
